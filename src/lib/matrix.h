@@ -15,3 +15,4 @@ typedef struct vector {
 void vec_add_inplace(vector_t *self, vector_t other);
 void vec_linspace(vector_t *self, float start, float end, unsigned size);
 void vec_create(vector_t *self);
+void vec_release(vector_t self);

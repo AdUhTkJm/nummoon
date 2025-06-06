@@ -33,3 +33,7 @@ void vec_linspace(vector_t *self, float start, float end, unsigned size) {
   vec_reserve(self, size);
   vflinspace_avx2(self->dat, start, (end - start) / (size - 1), round16(size));
 }
+
+void vec_release(vector_t self) {
+  free(self.dat);
+}
