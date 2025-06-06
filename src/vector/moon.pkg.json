@@ -1,1 +1,3 @@
-{}
+{
+  "native-stub": ["vector.c", "export.c", "vec_simd_linux.s"]
+}
