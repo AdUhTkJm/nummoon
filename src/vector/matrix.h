@@ -17,6 +17,11 @@ void vec_sub_inplace(vector_t *self, vector_t other);
 void vec_mul_inplace(vector_t *self, vector_t other);
 void vec_div_inplace(vector_t *self, vector_t other);
 
+void vec_add_inplace_f(vector_t *self, float num);
+void vec_sub_inplace_f(vector_t *self, float num);
+void vec_mul_inplace_f(vector_t *self, float num);
+void vec_div_inplace_f(vector_t *self, float num);
+
 void vec_add(vector_t *self, vector_t a, vector_t b);
 void vec_sub(vector_t *self, vector_t a, vector_t b);
 void vec_mul(vector_t *self, vector_t a, vector_t b);

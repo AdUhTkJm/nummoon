@@ -36,9 +36,8 @@ void functional() {
   vec_create(&vec2);
 
   vec_linspace(&vec1, 0, 5, 6);
-  vec_linspace(&vec2, 0, 5, 6);
 
-  vec_add_inplace(&vec1, vec2);
+  vec_sub_inplace_f(&vec1, 1.0);
   for (int i = 0; i < 6; i++)
     printf("%2f ", vec1.dat[i]);
   printf("\n");

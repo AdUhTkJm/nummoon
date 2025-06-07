@@ -40,6 +40,22 @@ void vec_div_inplace(vector_t *self, vector_t other) {
   vfdiv_avx2(self->dat, other.dat, self->dat, round16(other.sz));
 }
 
+void vec_add_inplace_f(vector_t *self, float num) {
+  vfaddf_avx2(self->dat, num, self->dat, round16(self->sz));
+}
+
+void vec_sub_inplace_f(vector_t *self, float num) {
+  vfsubf_avx2(self->dat, num, self->dat, round16(self->sz));
+}
+
+void vec_mul_inplace_f(vector_t *self, float num) {
+  vfmulf_avx2(self->dat, num, self->dat, round16(self->sz));
+}
+
+void vec_div_inplace_f(vector_t *self, float num) {
+  vfdivf_avx2(self->dat, num, self->dat, round16(self->sz));
+}
+
 void vec_add(vector_t *self, vector_t a, vector_t b) {
   unsigned sz = round16(a.sz);
   self->sz = a.sz;

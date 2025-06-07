@@ -3,6 +3,10 @@
 .global vfsub_avx2
 .global vfmul_avx2
 .global vfdiv_avx2
+.global vfaddf_avx2
+.global vfsubf_avx2
+.global vfmulf_avx2
+.global vfdivf_avx2
 .global vflinspace_avx2
 .section .note.GNU-stack,"",@progbits
 .text
@@ -92,6 +96,82 @@ vfdiv_avx2:
   lea rsi, [rsi + 64]
   lea rdx, [rdx + 64]
   dec ecx
+  jne 1b
+  ret
+
+# void vfaddf_avx2(float *a, float b, float *out, unsigned size)
+vfaddf_avx2:
+  shr edx, 4
+  vbroadcastss ymm1, xmm0
+1:
+  vmovaps ymm0, [rdi]
+  vaddps ymm0, ymm0, ymm1
+  vmovaps [rsi], ymm0
+
+  vmovaps ymm2, [rdi + 32]
+  vaddps ymm2, ymm2, ymm1
+  vmovaps [rsi + 32], ymm2
+
+  lea rdi, [rdi + 64]
+  lea rsi, [rsi + 64]
+  dec edx
+  jne 1b
+  ret
+
+# void vfsubf_avx2(float *a, float b, float *out, unsigned size)
+vfsubf_avx2:
+  shr edx, 4
+  vbroadcastss ymm1, xmm0
+1:
+  vmovaps ymm0, [rdi]
+  vsubps ymm0, ymm0, ymm1
+  vmovaps [rsi], ymm0
+
+  vmovaps ymm2, [rdi + 32]
+  vsubps ymm2, ymm2, ymm1
+  vmovaps [rsi + 32], ymm2
+
+  lea rdi, [rdi + 64]
+  lea rsi, [rsi + 64]
+  dec edx
+  jne 1b
+  ret
+
+# void vfmulf_avx2(float *a, float b, float *out, unsigned size)
+vfmulf_avx2:
+  shr edx, 4
+  vbroadcastss ymm1, xmm0
+1:
+  vmovaps ymm0, [rdi]
+  vmulps ymm0, ymm0, ymm1
+  vmovaps [rsi], ymm0
+
+  vmovaps ymm2, [rdi + 32]
+  vmulps ymm2, ymm2, ymm1
+  vmovaps [rsi + 32], ymm2
+
+  lea rdi, [rdi + 64]
+  lea rsi, [rsi + 64]
+  dec edx
+  jne 1b
+  ret
+
+# void vfdivf_avx2(float *a, float b, float *out, unsigned size)
+vfdivf_avx2:
+  shr edx, 4
+  vbroadcastss ymm1, xmm0
+1:
+  vmovaps ymm0, [rdi]
+  vdivps ymm0, ymm0, ymm1
+  vmovaps [rsi], ymm0
+
+  vmovaps ymm2, [rdi + 32]
+  vdivps ymm2, ymm2, ymm1
+  vmovaps [rsi + 32], ymm2
+
+  lea rdi, [rdi + 64]
+  lea rsi, [rsi + 64]
+  dec edx
   jne 1b
   ret
 

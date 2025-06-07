@@ -10,5 +10,10 @@ void vfsub_avx2(float *a, float *b, float *out, unsigned size);
 void vfmul_avx2(float *a, float *b, float *out, unsigned size);
 void vfdiv_avx2(float *a, float *b, float *out, unsigned size);
 
+void vfaddf_avx2(float *a, float num, float *out, unsigned size);
+void vfsubf_avx2(float *a, float num, float *out, unsigned size);
+void vfmulf_avx2(float *a, float num, float *out, unsigned size);
+void vfdivf_avx2(float *a, float num, float *out, unsigned size);
+
 // Note that `stop` is not provided.
 void vflinspace_avx2(float *out, float start, float step, unsigned size);

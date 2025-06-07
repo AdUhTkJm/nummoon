@@ -39,20 +39,36 @@ void *mbt_vfcopy(void *vec_) {
   return copy;
 }
 
-void mbt_vfaddeq(void *vec, void *vec2) {
+void mbt_vfaddeqv(void *vec, void *vec2) {
   vec_add_inplace((vector_t*) vec, *(vector_t*) vec2);
 }
 
-void mbt_vfsubeq(void *vec, void *vec2) {
+void mbt_vfsubeqv(void *vec, void *vec2) {
   vec_sub_inplace((vector_t*) vec, *(vector_t*) vec2);
 }
 
-void mbt_vfmuleq(void *vec, void *vec2) {
+void mbt_vfmuleqv(void *vec, void *vec2) {
   vec_mul_inplace((vector_t*) vec, *(vector_t*) vec2);
 }
 
-void mbt_vfdiveq(void *vec, void *vec2) {
+void mbt_vfdiveqv(void *vec, void *vec2) {
   vec_div_inplace((vector_t*) vec, *(vector_t*) vec2);
+}
+
+void mbt_vfaddeqf(void *vec, float num) {
+  vec_add_inplace_f((vector_t*) vec, num);
+}
+
+void mbt_vfsubeqf(void *vec, float num) {
+  vec_sub_inplace_f((vector_t*) vec, num);
+}
+
+void mbt_vfmuleqf(void *vec, float num) {
+  vec_mul_inplace_f((vector_t*) vec, num);
+}
+
+void mbt_vfdiveqf(void *vec, float num) {
+  vec_div_inplace_f((vector_t*) vec, num);
 }
 
 void mbt_vfadd(void *tgt, void *vec, void *vec2) {
