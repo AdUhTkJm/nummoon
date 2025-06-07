@@ -11,7 +11,7 @@
 # Arguments are rdi, rsi, rdx, rcx, r8, r9 for the first 6 integers.
 # Callee-saved registers only include rbx, rbp, rsp, r12-r15. No other things are needed.
 
-# void vfadd_avx2(const float *a, const float *b, float *out, unsigned size)
+# void vfadd_avx2(float *a, float *b, float *out, unsigned size)
 vfadd_avx2:
   shr ecx, 4
 1:
@@ -32,7 +32,7 @@ vfadd_avx2:
   jne 1b
   ret
 
-# void vfsub_avx2(const float *a, const float *b, float *out, unsigned size)
+# void vfsub_avx2(float *a, float *b, float *out, unsigned size)
 vfsub_avx2:
   shr ecx, 4
 1:
@@ -53,7 +53,7 @@ vfsub_avx2:
   jne 1b
   ret
 
-# void vfmul_avx2(const float *a, const float *b, float *out, unsigned size)
+# void vfmul_avx2(float *a, float *b, float *out, unsigned size)
 vfmul_avx2:
   shr ecx, 4
 1:
@@ -74,7 +74,7 @@ vfmul_avx2:
   jne 1b
   ret
 
-# void vfdiv_avx2(const float *a, const float *b, float *out, unsigned size)
+# void vfdiv_avx2(float *a, float *b, float *out, unsigned size)
 vfdiv_avx2:
   shr ecx, 4
 1:

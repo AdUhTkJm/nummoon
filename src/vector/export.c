@@ -54,3 +54,19 @@ void mbt_vfmuleq(void *vec, void *vec2) {
 void mbt_vfdiveq(void *vec, void *vec2) {
   vec_div_inplace((vector_t*) vec, *(vector_t*) vec2);
 }
+
+void mbt_vfadd(void *tgt, void *vec, void *vec2) {
+  vec_add((vector_t*) tgt, *(vector_t*) vec, *(vector_t*) vec2);
+}
+
+void mbt_vfsub(void *tgt, void *vec, void *vec2) {
+  vec_sub((vector_t*) tgt, *(vector_t*) vec, *(vector_t*) vec2);
+}
+
+void mbt_vfmul(void *tgt, void *vec, void *vec2) {
+  vec_mul((vector_t*) tgt, *(vector_t*) vec, *(vector_t*) vec2);
+}
+
+void mbt_vfdiv(void *tgt, void *vec, void *vec2) {
+  vec_div((vector_t*) tgt, *(vector_t*) vec, *(vector_t*) vec2);
+}
