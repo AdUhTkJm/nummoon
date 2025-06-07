@@ -2,9 +2,9 @@
   "name": "AdUhTkJm/nummoon",
   "version": "0.1.0",
   "readme": "README.md",
-  "repository": "",
+  "repository": "https://github.com/AdUhTkJm/nummoon",
   "license": "GPL-3.0-or-later",
-  "keywords": [],
-  "description": "",
+  "keywords": ["vector", "math", "linear algebra"],
+  "description": "A high-speed native numerical library.",
   "source": "src"
 }
