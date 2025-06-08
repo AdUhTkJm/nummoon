@@ -1,7 +1,9 @@
 {
   "targets": {
     "vector.mbt": ["native"],
-    "vector_fallback.mbt": ["not", "native"]
+    "vector_fallback.mbt": ["not", "native"],
+    "matrix.mbt": ["native"],
+    "matrix_fallback.mbt": ["not", "native"]
   },
-  "native-stub": ["vector.c", "export.c", "vec_simd_linux.s"]
+  "native-stub": ["vector.c", "export.c", "vec_simd_linux.s", "matrix.c", "mat_simd_linux.s"]
 }

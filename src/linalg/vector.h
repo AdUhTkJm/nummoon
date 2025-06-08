@@ -1,11 +1,3 @@
-typedef struct matrix {
-  // Row-major format.
-  float *dat;
-  
-  // Rows and columns.
-  unsigned r, c;
-} matrix_t;
-
 typedef struct vector {
   float *dat;
   unsigned cap;

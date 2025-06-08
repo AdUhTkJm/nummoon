@@ -152,6 +152,9 @@ pub fn[T: VPointwiseOperable] Vector::div(self: Vector, other: T) -> Vector {
 }
 
 ///| Create a vector containing numbers from 0 (inclusive) to stop (exclusive).
+/// 
+/// WARNING: The function panics when `stop` is greater than 16777216. See `linspace()` for explanation.
+/// 
 /// **Example**:
 /// ```mbt
 /// let x = Vector::arange(6);
@@ -160,8 +163,13 @@ pub fn[T: VPointwiseOperable] Vector::div(self: Vector, other: T) -> Vector {
 /// println(x); // [0, 1, 2, 3, 4, 5, 6]
 /// ```
 pub fn Vector::arange(stop: Float) -> Vector {
-  let data = vfcreate();
   let s = stop.ceil().to_int();
+  if (s <= 0) {
+    return Vector::new();
+  }
+  
+  guard s <= 16777216;
+  let data = vfcreate();
   vflinspace(data, 0, (s - 1).to_float(), s);
   return { data: data };
 }
@@ -316,7 +324,18 @@ pub fn Vector::cos_between(self: Vector, other: Vector) -> Float {
 /// where `step` is equal to `(stop - start) / (num - 1)`.
 /// 
 /// Note that there might be some difference because of the limited precision of float.
+/// 
+/// WARNING: When supplied `num > 16777216` (which is 2^24), the function panics. Beyond that number,
+/// `float` cannot precisely represent integers. As a workaround, concatenate multiple vectors together
+/// if you need such long vectors. 
+/// 
+/// The restriction does not apply to the fallback implementation. However, for compatibility, it is
+/// still recommended to not supply an overly large argument.
 pub fn Vector::linspace(start: Float, stop: Float, num: Int) -> Vector {
+  if (num <= 0) {
+    return Vector::new();
+  }
+  guard num <= 16777216;
   let data = vfcreate();
   vflinspace(data, start, stop, num);
   return { data: data };

@@ -2,7 +2,10 @@
 
 This is a high-speed numerical library, in its very early stage.
 
-To enable the SIMD operations, it is required that you are compiling with native backend. Currently, it only supports System-V ABI, which is the ABI used on most Unix distributions. It also assumes x86, and assumes that you have AVX-2 enabled.
+To enable the SIMD operations, it is required that you are compiling with native backend. Currently, it makes following assumptions:
+
+- You're using System-V ABI, which is the ABI used on most Unix distributions;
+- You're using x86 with AVX-2 enabled.
 
 When native backend is not enabled, the library falls back to a Moonbit implementation. However, this will experience much slow down. See [benchmark](#benchmark) as an example.
 

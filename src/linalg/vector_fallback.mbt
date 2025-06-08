@@ -146,6 +146,9 @@ pub fn[T: VPointwiseOperable] Vector::div(self: Vector, other: T) -> Vector {
 }
 
 ///| Create a vector containing numbers from 0 (inclusive) to stop (exclusive).
+/// 
+/// WARNING: The function panics when `stop` is greater than 16777216. See `linspace()` for explanation.
+/// 
 /// **Example**:
 /// ```mbt
 /// let x = Vector::arange(6);
@@ -318,6 +321,13 @@ pub fn Vector::cos_between(self: Vector, other: Vector) -> Float {
 /// where `step` is equal to `(stop - start) / (num - 1)`.
 /// 
 /// Note that there might be some difference because of the limited precision of float.
+///  
+/// WARNING: When supplied `num > 16777216` (which is 2^24), the function panics. Beyond that number,
+/// `float` cannot precisely represent integers. As a workaround, concatenate multiple vectors together
+/// if you need such long vectors. 
+/// 
+/// The restriction does not apply to the fallback implementation. However, for compatibility, it is
+/// still recommended to not supply an overly large argument.
 pub fn Vector::linspace(start: Float, stop: Float, num: Int) -> Vector {
   if (num == 1) {
     return { data: [start] };
@@ -352,6 +362,7 @@ test "benchmark_dot" {
   println(summary.to_json().stringify());
 }
 
-pub fn Vector::view(data: Array[Float]) -> Vector {
-  
+///| Create a view from internal data type.
+fn Vector::view(data: Array[Float]) -> Vector {
+  return { data: data };
 }

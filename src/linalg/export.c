@@ -1,5 +1,7 @@
 #include "vector.h"
+#include "matrix.h"
 #include "moonbit.h"
+#include "intrin.h"
 #include <string.h>
 
 void mbt_vfrelease(void *payload) {
@@ -117,4 +119,54 @@ void mbt_vfset(void *vec, unsigned i, float f) {
 
 float mbt_vfdot(void *x, void *y) {
   return vec_dot(*(vector_t*) x, *(vector_t*) y);
+}
+
+void mbt_mfrelease(void *payload) {
+  mat_release(*(matrix_t*) payload);
+}
+
+void *mbt_mfcreate() {
+  matrix_t *mat = moonbit_make_external_object(mbt_mfrelease, sizeof(matrix_t));
+  mat_create(mat);
+  return mat;
+}
+
+void mbt_mfaddeq(void *x, void *y) {
+  mat_add_inplace((matrix_t*) x, *(matrix_t*) y);
+}
+
+void *mbt_mfcopyf(float **arr) {
+  matrix_t *mat = mbt_mfcreate();
+  mat->r = Moonbit_array_length(arr);
+  mat->c = Moonbit_array_length(arr[0]);
+
+  // Round `r` to 16 floats.
+  int rlen = round16(mat->c);
+  int cap = rlen * mat->r;
+  mat_reserve(mat, cap);
+  // The outer loop can hardly be vectorized;
+  // The arrays in `arr` are not necessarily contiguous.
+  for (int i = 0; i < mat->r; i++)
+    memcpy(mat->dat + i * rlen, arr[i], mat->c * sizeof(float));
+  
+  return mat;
+}
+
+float *mbt_mf2mbtarr(void *mat_) {
+  matrix_t *mat = mat_;
+  int rlen = round16(mat->c);
+  
+  float *arr = moonbit_make_float_array(mat->r * mat->c, 0);
+  for (int i = 0; i < mat->r; i++)
+    memcpy(arr + i * mat->c, mat->dat + i * rlen, mat->c * sizeof(float));
+  
+  return arr;
+}
+
+int mbt_mfrows(void *mat) {
+  return ((matrix_t*) mat)->r;
+}
+
+int mbt_mfcols(void *mat) {
+  return ((matrix_t*) mat)->c;
 }
