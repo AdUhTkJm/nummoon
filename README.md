@@ -1,10 +1,10 @@
 # AdUhTkJm/nummoon
 
-This is a high-speed native numerical library, in its very early stage.
+This is a high-speed numerical library, in its very early stage.
 
-Currently it only supports System-V ABI, which is the ABI used on most Unix distributions. It also assumes x86, and assumes that you have AVX-2 enabled.
+To enable the SIMD operations, it is required that you are compiling with native backend. Currently, it only supports System-V ABI, which is the ABI used on most Unix distributions. It also assumes x86, and assumes that you have AVX-2 enabled.
 
-Other than those prerequisites, there's nothing extra to set up.
+When native backend is not enabled, the library falls back to a Moonbit implementation. However, this will experience much slow down. See [benchmark](#benchmark) as an example.
 
 If you're willing to, I'm welcome for contributions.
 
@@ -52,3 +52,35 @@ let y = x;
 y.mul(2); // Now `y` and `x` will both change.
 inspect(x, content="[4, 10, 14, 16, 18, 6]");
 ```
+
+## Benchmark
+
+We will compare between Moonbit fallback implementation of WASM-GC backend, the native AVX-2 implementaion, and the well-known python library `numpy`. We will present the Moonbit benchmark here; for the python benchmark, please visit the [repository](https://github.com/AdUhTkJm/nummoon/tree/main/benchmark).
+
+We will also calculate the speedup between the native and fallback.
+
+### Addition
+
+```mbt
+test "benchmark_add" {
+  let summary = @bench.single_bench(fn () {
+    let n = 1048576;
+    let c = Vector::zeroes(n);
+    let a = Vector::arange(n.to_float());
+    for i = 0; i < 1000; i = i + 1 {
+      c.add(a).ignore();
+    }
+    println(c.sum());
+  });
+  println(summary.to_json().stringify());
+}
+```
+
+Output comparison:
+
+- Moonbit WASM-GC implementation: 1301093.910345 us
+- Native AVX-2 implementation: 70971.5926 us
+- Numpy: 75820.92 us
+
+Speedup: 13.8x
+

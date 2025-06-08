@@ -1,28 +1,3 @@
-extern type CVector;
-
-extern "C" fn vfcreate() -> CVector = "mbt_vfcreate";
-extern "C" fn vf2mbtarr(vec: CVector) -> FixedArray[Float] = "mbt_vf2mbtarr";
-extern "C" fn vflinspace(vec: CVector, start: Float, stop: Float, size: Int) -> Unit = "mbt_vflinspace";
-extern "C" fn vfaddeqv(vec: CVector, vec2: CVector) -> Unit = "mbt_vfaddeqv";
-extern "C" fn vfsubeqv(vec: CVector, vec2: CVector) -> Unit = "mbt_vfsubeqv";
-extern "C" fn vfmuleqv(vec: CVector, vec2: CVector) -> Unit = "mbt_vfmuleqv";
-extern "C" fn vfdiveqv(vec: CVector, vec2: CVector) -> Unit = "mbt_vfdiveqv";
-extern "C" fn vfaddeqf(vec: CVector, vec2: Float) -> Unit = "mbt_vfaddeqf";
-extern "C" fn vfsubeqf(vec: CVector, vec2: Float) -> Unit = "mbt_vfsubeqf";
-extern "C" fn vfmuleqf(vec: CVector, vec2: Float) -> Unit = "mbt_vfmuleqf";
-extern "C" fn vfdiveqf(vec: CVector, vec2: Float) -> Unit = "mbt_vfdiveqf";
-extern "C" fn vfadd(tgt: CVector, vev: CVector, vec2: CVector) -> Unit = "mbt_vfadd";
-extern "C" fn vfsub(tgt: CVector, vev: CVector, vec2: CVector) -> Unit = "mbt_vfsub";
-extern "C" fn vfmul(tgt: CVector, vev: CVector, vec2: CVector) -> Unit = "mbt_vfmul";
-extern "C" fn vfdiv(tgt: CVector, vev: CVector, vec2: CVector) -> Unit = "mbt_vfdiv";
-extern "C" fn vfcopy(vec: CVector) -> CVector = "mbt_vfcopy";
-extern "C" fn vfcopyf(dat: FixedArray[Float]) -> CVector = "mbt_vfcopyf";
-extern "C" fn vfsum(vec: CVector) -> Float = "mbt_vfsum";
-extern "C" fn vfget(vec: CVector, i: UInt) -> Float = "mbt_vfget";
-extern "C" fn vfset(vec: CVector, i: UInt, f: Float) -> Unit = "mbt_vfset";
-extern "C" fn vfgetsize(vec: CVector) -> UInt = "mbt_vfgetsize";
-extern "C" fn vfzero(i: UInt) -> CVector = "mbt_vfzero";
-
 ///| Pointwise (element-wise) operable with a vector.
 /// By default, Int, Float and Vector implement this trait.
 pub(open) trait VPointwiseOperable {
@@ -35,67 +10,91 @@ pub(open) trait VPointwiseOperable {
 // ======= Int =======
 
 pub impl VPointwiseOperable for Int with add_inplace(v: Vector, self: Int) -> Unit {
-  vfaddeqf(v.data, self.to_float());
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] += self.to_float();
+  }
 }
 
 pub impl VPointwiseOperable for Int with sub_inplace(v: Vector, self: Int) -> Unit {
-  vfsubeqf(v.data, self.to_float());
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] -= self.to_float();
+  }
 }
 
 pub impl VPointwiseOperable for Int with mul_inplace(v: Vector, self: Int) -> Unit {
-  vfmuleqf(v.data, self.to_float());
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] *= self.to_float();
+  }
 }
 
 pub impl VPointwiseOperable for Int with div_inplace(v: Vector, self: Int) -> Unit {
-  vfdiveqf(v.data, self.to_float());
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] /= self.to_float();
+  }
 }
 
 // ======= Float =======
 
 pub impl VPointwiseOperable for Float with add_inplace(v: Vector, self: Float) -> Unit {
-  vfaddeqf(v.data, self);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] += self;
+  }
 }
 
 pub impl VPointwiseOperable for Float with sub_inplace(v: Vector, self: Float) -> Unit {
-  vfsubeqf(v.data, self);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] -= self;
+  }
 }
 
 pub impl VPointwiseOperable for Float with mul_inplace(v: Vector, self: Float) -> Unit {
-  vfmuleqf(v.data, self);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] *= self;
+  }
 }
 
 pub impl VPointwiseOperable for Float with div_inplace(v: Vector, self: Float) -> Unit {
-  vfdiveqf(v.data, self);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] /= self;
+  }
 }
 
 // ======= Vector =======
 
 pub impl VPointwiseOperable for Vector with add_inplace(v: Vector, self: Vector) -> Unit {
   guard v.size() == self.size();
-  vfaddeqv(v.data, self.data);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] += self.data[i];
+  }
 }
 
 pub impl VPointwiseOperable for Vector with sub_inplace(v: Vector, self: Vector) -> Unit {
   guard v.size() == self.size();
-  vfsubeqv(v.data, self.data);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] -= self.data[i];
+  }
 }
 
 pub impl VPointwiseOperable for Vector with mul_inplace(v: Vector, self: Vector) -> Unit {
   guard v.size() == self.size();
-  vfmuleqv(v.data, self.data);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] *= self.data[i];
+  }
 }
 
 pub impl VPointwiseOperable for Vector with div_inplace(v: Vector, self: Vector) -> Unit {
   guard v.size() == self.size();
-  vfdiveqv(v.data, self.data);
+  for i = 0; i < v.data.length(); i = i + 1 {
+    v.data[i] /= self.data[i];
+  }
 }
 
 pub struct Vector {
-  priv data: CVector;
+  data: Array[Float];
 };
 
 pub impl Show for Vector with to_string(self) -> String {
-  return vf2mbtarr(self.data).to_string();
+  return self.data.to_string();
 }
 
 pub impl Show for Vector with output(self, logger: &Logger) -> Unit {
@@ -103,27 +102,23 @@ pub impl Show for Vector with output(self, logger: &Logger) -> Unit {
 }
 
 pub impl Add for Vector with op_add(self: Vector, other: Vector) -> Vector {
-  let copied = vfcreate();
-  vfadd(copied, self.data, other.data);
-  return { data: copied };
+  let copied = self.clone();
+  return { data: copied.add(other).data };
 }
 
 pub impl Sub for Vector with op_sub(self: Vector, other: Vector) -> Vector {
-  let copied = vfcreate();
-  vfsub(copied, self.data, other.data);
-  return { data: copied };
+  let copied = self.clone();
+  return { data: copied.sub(other).data };
 }
 
 pub impl Mul for Vector with op_mul(self: Vector, other: Vector) -> Vector {
-  let copied = vfcreate();
-  vfmul(copied, self.data, other.data);
-  return { data: copied };
+  let copied = self.clone();
+  return { data: copied.mul(other).data };
 }
 
 pub impl Div for Vector with op_div(self: Vector, other: Vector) -> Vector {
-  let copied = vfcreate();
-  vfdiv(copied, self.data, other.data);
-  return { data: copied };
+  let copied = self.clone();
+  return { data: copied.div(other).data };
 }
 
 ///| Add inplace. Returns a reference to self.
@@ -159,9 +154,11 @@ pub fn[T: VPointwiseOperable] Vector::div(self: Vector, other: T) -> Vector {
 /// println(x); // [0, 1, 2, 3, 4, 5, 6]
 /// ```
 pub fn Vector::arange(stop: Float) -> Vector {
-  let data = vfcreate();
   let s = stop.ceil().to_int();
-  vflinspace(data, 0, (s - 1).to_float(), s);
+  let data = Array::new(capacity = s);
+  for i = 0; i < s; i = i + 1 {
+    data.push(i.to_float());
+  }
   return { data: data };
 }
 
@@ -194,54 +191,59 @@ test "arithmetic" {
 
 ///| Create an empty vector.
 pub fn Vector::new() -> Vector {
-  return { data: vfcreate() };
+  return { data: [] };
 }
 
 ///| Clone a vector.
 pub fn Vector::clone(self: Vector) -> Vector {
-  return { data: vfcopy(self.data) };
+  return { data: self.data.copy() };
 }
 
 ///| Sums up all elements inside this vector.
 pub fn Vector::sum(self: Vector) -> Float {
-  return vfsum(self.data);
+  let s = self.size().reinterpret_as_int();
+  let mut sum = 0.F;
+  for i = 0; i < s; i = i + 1 {
+    sum += self.data[i];
+  }
+  return sum;
 }
 
 ///| Creates a new vector from the array.
 /// 
 /// Data is copied from the argument; subsequent changes to the vector won't affect the array.
 pub fn Vector::from_array(array: Array[Float]) -> Vector {
-  return { data: vfcopyf(FixedArray::from_array(array)) };
+  return { data: array };
 }
 
 ///| Creates a new vector from a fixed array.
 /// 
 /// Data is copied from the argument; subsequent changes to the vector won't affect the array.
 pub fn Vector::from_fixed_array(array: FixedArray[Float]) -> Vector {
-  return { data: vfcopyf(array) };
+  return { data: Array::from_fixed_array(array) };
 }
 
 ///| Returns the size (element count) of the vector.
 pub fn Vector::size(self: Vector) -> UInt {
-  return vfgetsize(self.data);
+  return self.data.length().reinterpret_as_uint();
 }
 
 ///| Returns the length (element count) of the vector,
 /// and converts it to signed integer.
 pub fn Vector::length(self: Vector) -> Int {
-  return vfgetsize(self.data).reinterpret_as_int();
+  return self.data.length();
 }
 
 ///| Retrieves the i'th element, starting from 0.
 pub fn Vector::op_get(self: Vector, i: UInt) -> Float {
   guard i < self.size();
-  return vfget(self.data, i);
+  return self.data[i.reinterpret_as_int()];
 }
 
 ///| Sets the i'th element, starting from 0.
 pub fn Vector::op_set(self: Vector, i: UInt, f: Float) -> Unit {
   guard i < self.size();
-  return vfset(self.data, i, f);
+  self.data[i.reinterpret_as_int()] = f;
 }
 
 ///| Create a vector filled with zeroes.
@@ -252,7 +254,7 @@ pub fn Vector::zeroes(len: Int) -> Vector {
     return Vector::new();
   }
 
-  return { data: vfzero(len.reinterpret_as_uint()) };
+  return { data: Array::make(len, 0) };
 }
 
 ///| Ignores the result given by self-reference.
@@ -272,9 +274,6 @@ test "create" {
   y[2] = 0;
   inspect(y.sum(), content="43");
   inspect(v.sum(), content="43");
-
-  let zeroes = Vector::zeroes(7);
-  inspect(zeroes, content="[0, 0, 0, 0, 0, 0, 0]");
 }
 
 test "benchmark_add" {

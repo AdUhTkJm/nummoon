@@ -1,6 +1,7 @@
 {
   "targets": {
-    "vector.mbt": ["native"]
+    "vector.mbt": ["native"],
+    "vector_fallback.mbt": ["not", "native"]
   },
   "native-stub": ["vector.c", "export.c", "vec_simd_linux.s"]
 }

@@ -43,6 +43,14 @@ void *mbt_vfcopyf(float *arr) {
   return copy;
 }
 
+void *mbt_vfzero(unsigned sz) {
+  vector_t *zeroes = mbt_vfcreate();
+  zeroes->sz = sz;
+  vec_reserve(zeroes, sz);
+  memset(zeroes->dat, 0, sz * sizeof(float));
+  return zeroes;
+}
+
 void mbt_vfaddeqv(void *vec, void *vec2) {
   vec_add_inplace((vector_t*) vec, *(vector_t*) vec2);
 }

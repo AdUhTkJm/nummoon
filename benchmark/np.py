@@ -2,8 +2,8 @@
 import numpy as np
 import time
 
-SIZE = 1024000
-REPEAT = 10000
+SIZE = 1048576
+REPEAT = 1000
 
 a = np.arange(SIZE, dtype=np.float32) * 0.001
 b = np.arange(SIZE, dtype=np.float32) * 0.002
