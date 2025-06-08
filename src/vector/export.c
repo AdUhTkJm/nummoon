@@ -1,7 +1,6 @@
 #include "matrix.h"
 #include "moonbit.h"
 #include <string.h>
-#include <stdio.h>
 
 void mbt_vfrelease(void *payload) {
   vec_release(*(vector_t*) payload);
@@ -30,12 +29,17 @@ void *mbt_vfcopy(void *vec_) {
   vector_t *vec = vec_;
   vector_t *copy = mbt_vfcreate();
   copy->sz = vec->sz;
-  copy->cap = vec->cap;
-  vec_reserve(copy, copy->cap);
+  vec_reserve(copy, vec->cap);
   memcpy(copy->dat, vec->dat, copy->sz * sizeof(float));
-  for (int i = 0; i < 6; i++)
-    printf("%2f ", ((vector_t*) copy)->dat[i]);
-  printf("\n");
+  return copy;
+}
+
+void *mbt_vfcopyf(float *arr) {
+  vector_t *copy = mbt_vfcreate();
+  int sz = Moonbit_array_length(arr);
+  copy->sz = sz;
+  vec_reserve(copy, sz);
+  memcpy(copy->dat, arr, sz * sizeof(float));
   return copy;
 }
 
@@ -85,4 +89,20 @@ void mbt_vfmul(void *tgt, void *vec, void *vec2) {
 
 void mbt_vfdiv(void *tgt, void *vec, void *vec2) {
   vec_div((vector_t*) tgt, *(vector_t*) vec, *(vector_t*) vec2);
+}
+
+float mbt_vfsum(void *vec) {
+  return vec_sum(*(vector_t*) vec);
+}
+
+unsigned mbt_vfgetsize(void *vec) {
+  return ((vector_t*) vec)->sz;
+}
+
+float mbt_vfget(void *vec, unsigned i) {
+  return ((vector_t*) vec)->dat[i];
+}
+
+void mbt_vfset(void *vec, unsigned i, float f) {
+  ((vector_t*) vec)->dat[i] = f;
 }

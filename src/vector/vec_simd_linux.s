@@ -8,6 +8,7 @@
 .global vfmulf_avx2
 .global vfdivf_avx2
 .global vflinspace_avx2
+.global vfsum_avx2
 .section .note.GNU-stack,"",@progbits
 .text
 
@@ -175,7 +176,7 @@ vfdivf_avx2:
   jne 1b
   ret
 
-# void vflinspace_avx2(float *out, float start, float step, unsigned size);
+# void vflinspace_avx2(float *out, float start, float step, unsigned size)
 vflinspace_avx2:
   # Prepare 8 increasing elements and starting vector
   vmovaps ymm2, [rip + vf_index_increase_8]
@@ -199,6 +200,31 @@ vflinspace_avx2:
   add eax, 16
   cmp eax, esi
   jb 1b
+  ret
+
+# float vfsum_avx2(const float *in, unsigned size)
+vfsum_avx2:
+  vpxor ymm0, ymm0, ymm0
+  shr esi, 4
+1:
+  vmovaps ymm1, [rdi]
+  vaddps ymm0, ymm0, ymm1
+
+  vmovaps ymm2, [rdi + 32]
+  vaddps ymm0, ymm0, ymm2
+
+  lea rdi, [rdi + 64]
+  dec esi
+  jnz 1b
+
+  vextractf128 xmm1, ymm0, 0
+  vextractf128 xmm2, ymm0, 1
+  vaddps xmm1, xmm1, xmm2
+  vpshufd xmm2, xmm1, 0b00001011
+  vaddps xmm1, xmm1, xmm2
+  vpshufd xmm3, xmm1, 0b00000001
+  vaddps xmm1, xmm1, xmm3
+  movss xmm0, xmm1
   ret
 
 .section .rodata

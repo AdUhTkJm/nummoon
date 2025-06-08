@@ -9,12 +9,12 @@ unsigned round16(unsigned x) {
   return x;
 }
 
-void vec_reserve(vector_t *self, unsigned size) {
-  int rnd = round16(size) * sizeof(float);
-  if (self->cap >= rnd)
+void vec_reserve(vector_t *self, unsigned cap) {
+  if (self->cap >= cap)
     return;
   free(self->dat);
-  self->cap = rnd << 1;
+  self->cap = ((self->cap << 1) < cap) ? cap : (self->cap << 1);
+  self->cap = round16(self->cap);
   self->dat = aligned_alloc(32, self->cap * sizeof(float));
 }
 
@@ -92,4 +92,13 @@ void vec_linspace(vector_t *self, float start, float end, unsigned size) {
 
 void vec_release(vector_t self) {
   free(self.dat);
+}
+
+float vec_sum(vector_t self) {
+  // Zero out the later parts by ordinary loop.
+  int rnd = round16(self.sz);
+  for (int i = self.sz; i < rnd; i++)
+    self.dat[i] = 0;
+
+  return vfsum_avx2(self.dat, rnd);
 }

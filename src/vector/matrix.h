@@ -32,3 +32,5 @@ void vec_linspace(vector_t *self, float start, float end, unsigned size);
 void vec_create(vector_t *self);
 void vec_release(vector_t self);
 void vec_reserve(vector_t *self, unsigned size);
+
+float vec_sum(vector_t self);

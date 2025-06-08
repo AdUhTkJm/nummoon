@@ -37,10 +37,11 @@ void functional() {
 
   vec_linspace(&vec1, 0, 5, 6);
 
-  vec_sub_inplace_f(&vec1, 1.0);
+  vec_add_inplace_f(&vec1, 1.0);
   for (int i = 0; i < 6; i++)
-    printf("%2f ", vec1.dat[i]);
+    printf("%.2f ", vec1.dat[i]);
   printf("\n");
+  printf("total = %.2f\n", vec_sum(vec1));
 }
 
 int main() {

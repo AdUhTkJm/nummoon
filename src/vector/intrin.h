@@ -17,3 +17,5 @@ void vfdivf_avx2(float *a, float num, float *out, unsigned size);
 
 // Note that `stop` is not provided.
 void vflinspace_avx2(float *out, float start, float step, unsigned size);
+
+float vfsum_avx2(const float *out, unsigned size);
