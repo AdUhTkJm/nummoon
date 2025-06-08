@@ -9,6 +9,10 @@ unsigned round16(unsigned x) {
   return x;
 }
 
+unsigned round16down(unsigned x) {
+  return x / 16 * 16;
+}
+
 void vec_reserve(vector_t *self, unsigned cap) {
   if (self->cap >= cap)
     return;
@@ -101,4 +105,14 @@ float vec_sum(vector_t self) {
     self.dat[i] = 0;
 
   return vfsum_avx2(self.dat, rnd);
+}
+
+float vec_dot(vector_t x, vector_t y) {
+  int down = round16down(x.sz);
+  float f = 0;
+  if (down)
+    f = vfdot_avx2(x.dat, y.dat, down);
+  for (int i = down; i < x.sz; i++)
+    f += x.dat[i] * y.dat[i];
+  return f;
 }

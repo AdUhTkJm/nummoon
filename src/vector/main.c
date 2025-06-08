@@ -36,12 +36,9 @@ void functional() {
   vec_create(&vec2);
 
   vec_linspace(&vec1, 0, 5, 6);
+  vec_linspace(&vec2, 0, 5, 6);
 
-  vec_add_inplace_f(&vec1, 1.0);
-  for (int i = 0; i < 6; i++)
-    printf("%.2f ", vec1.dat[i]);
-  printf("\n");
-  printf("total = %.2f\n", vec_sum(vec1));
+  printf("%.2f\n", vec_dot(vec1, vec2));
 }
 
 int main() {

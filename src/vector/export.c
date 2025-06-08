@@ -114,3 +114,7 @@ float mbt_vfget(void *vec, unsigned i) {
 void mbt_vfset(void *vec, unsigned i, float f) {
   ((vector_t*) vec)->dat[i] = f;
 }
+
+float mbt_vfdot(void *x, void *y) {
+  return vec_dot(*(vector_t*) x, *(vector_t*) y);
+}

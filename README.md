@@ -59,6 +59,8 @@ We will compare between Moonbit fallback implementation of WASM-GC backend, the 
 
 We will also calculate the speedup between the native and fallback.
 
+(CPU: AMD Ryzen 9 7945HX)
+
 ### Addition
 
 ```mbt
@@ -78,9 +80,31 @@ test "benchmark_add" {
 
 Output comparison:
 
-- Moonbit WASM-GC implementation: 1301093.910345 us
-- Native AVX-2 implementation: 70971.5926 us
+- Moonbit WASM-GC implementation: 1301093.91 us
+- Native AVX-2 implementation: 70971.59 us
 - Numpy: 75820.92 us
 
 Speedup: 13.8x
 
+### Dot product
+
+```mbt
+test "benchmark_dot" {
+  let x = Vector::linspace(0.2795, 6.8704, 1048576);
+  let y = Vector::linspace(-1.6269, 3.5057, 1048576);
+  let mut sum = 0.F;
+  let summary = @bench.single_bench(fn () {
+    sum += x.dot(y);
+  });
+  println(sum);
+  println(summary.to_json().stringify());
+}
+```
+
+Output comparison:
+
+- Moonbit WASM-GC implementation: 2551.06 us
+- Native AVX-2 implementation: 82.66 us
+- Numpy: 639.09 us
+
+Speedup: 30.9x

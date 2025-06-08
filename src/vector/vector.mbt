@@ -22,6 +22,7 @@ extern "C" fn vfget(vec: CVector, i: UInt) -> Float = "mbt_vfget";
 extern "C" fn vfset(vec: CVector, i: UInt, f: Float) -> Unit = "mbt_vfset";
 extern "C" fn vfgetsize(vec: CVector) -> UInt = "mbt_vfgetsize";
 extern "C" fn vfzero(i: UInt) -> CVector = "mbt_vfzero";
+extern "C" fn vfdot(vec: CVector, vec2: CVector) -> Float = "mbt_vfdot";
 
 ///| Pointwise (element-wise) operable with a vector.
 /// By default, Int, Float and Vector implement this trait.
@@ -228,6 +229,9 @@ pub fn Vector::size(self: Vector) -> UInt {
 
 ///| Returns the length (element count) of the vector,
 /// and converts it to signed integer.
+/// 
+/// NOTE: this is **not** the norm of the vector.
+/// To calculate the length of this vector in Euclidean space, use `norm()` instead.
 pub fn Vector::length(self: Vector) -> Int {
   return vfgetsize(self.data).reinterpret_as_int();
 }
@@ -287,5 +291,54 @@ test "benchmark_add" {
     }
     println(c.sum());
   });
+  println(summary.to_json().stringify());
+}
+
+///| Calculate dot product of two vectors.
+pub fn Vector::dot(self: Vector, other: Vector) -> Float {
+  guard self.size() == other.size();
+  return vfdot(self.data, other.data);
+}
+
+///| Calculate the L2 norm (the length in Euclidean space) of the vector.
+pub fn Vector::norm(self: Vector) -> Float {
+  return self.dot(self).sqrt();
+}
+
+///| Calculate the cosine value between two vectors.
+pub fn Vector::cos_between(self: Vector, other: Vector) -> Float {
+  return self.dot(other) / (self.norm() * other.norm());
+}
+
+///| Create a vector containing numbers from `start` to `stop`, with a total of `num` elements.
+/// 
+/// The i'th element of the result vector is `start + i * step`,
+/// where `step` is equal to `(stop - start) / (num - 1)`.
+/// 
+/// Note that there might be some difference because of the limited precision of float.
+pub fn Vector::linspace(start: Float, stop: Float, num: Int) -> Vector {
+  let data = vfcreate();
+  vflinspace(data, start, stop, num);
+  return { data: data };
+}
+
+test "dot" {
+  let x = Vector::from_array([3, 4]);
+  inspect(x.norm(), content="5");
+
+  let y = Vector::linspace(0, 6.4, 5);
+  inspect(y, content="[0, 1.600000023841858, 3.200000047683716, 4.800000190734863, 6.400000095367432]");
+  let z = Vector::arange(5);
+  inspect(y.dot(z), content="48");
+}
+
+test "benchmark_dot" {
+  let x = Vector::linspace(0.2795, 6.8704, 1048576);
+  let y = Vector::linspace(-1.6269, 3.5057, 1048576);
+  let mut sum = 0.F;
+  let summary = @bench.single_bench(fn () {
+    sum = x.dot(y);
+  });
+  inspect(sum, content="6477421");
   println(summary.to_json().stringify());
 }
