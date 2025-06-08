@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include "matrix.h"
+#include "vector.h"
 
 double current() {
   struct timespec t;

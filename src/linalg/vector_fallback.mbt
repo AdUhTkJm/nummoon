@@ -351,3 +351,7 @@ test "benchmark_dot" {
   inspect(sum, content="6477421");
   println(summary.to_json().stringify());
 }
+
+pub fn Vector::view(data: Array[Float]) -> Vector {
+  
+}
