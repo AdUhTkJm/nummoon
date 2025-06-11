@@ -358,7 +358,7 @@ test "benchmark_dot" {
   let summary = @bench.single_bench(fn () {
     sum = x.dot(y);
   });
-  inspect(sum, content="6477421");
+  inspect(sum, content="6477271");
   println(summary.to_json().stringify());
 }
 

@@ -60,7 +60,9 @@ inspect(x, content="[4, 10, 14, 16, 18, 6]");
 
 We will compare between Moonbit fallback implementation of WASM-GC backend, the native AVX-2 implementaion, and the well-known python library `numpy`. We will present the Moonbit benchmark here; for the python benchmark, please visit the [repository](https://github.com/AdUhTkJm/nummoon/tree/main/benchmark).
 
-We will also calculate the speedup between the native and fallback.
+*Why comparing WASM-GC with native?* Actually, I tried to run the fallback implementation on native backend as well. However, the result turned out to be that Moonbit's native backend is extremely slow: it will experience ~20x slow down with WASM-GC when executing such benchmarks. The reason is still unclear to me. If you have any idea, please file an issue in the repository, and I would appreciate your help.
+
+In the following sections, we will also calculate the speedup brought by the native to fallback implementation.
 
 (CPU: AMD Ryzen 9 7945HX)
 

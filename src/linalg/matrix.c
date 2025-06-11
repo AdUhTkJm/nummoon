@@ -20,3 +20,43 @@ void mat_create(matrix_t *self) {
 void mat_add_inplace(matrix_t *self, matrix_t other) {
   mfadd_avx2(self->dat, other.dat, self->dat, other.r, round16(other.c));
 }
+
+void mat_sub_inplace(matrix_t *self, matrix_t other) {
+  mfsub_avx2(self->dat, other.dat, self->dat, other.r, round16(other.c));
+}
+
+void mat_mul_inplace(matrix_t *self, matrix_t other) {
+  mfmul_avx2(self->dat, other.dat, self->dat, other.r, round16(other.c));
+}
+
+void mat_div_inplace(matrix_t *self, matrix_t other) {
+  mfdiv_avx2(self->dat, other.dat, self->dat, other.r, round16(other.c));
+}
+
+void mat_add(matrix_t *self, matrix_t a, matrix_t b) {
+  self->c = a.c;
+  self->r = a.r;
+  mat_reserve(self, round16(a.c) * a.r);
+  mfadd_avx2(a.dat, b.dat, self->dat, a.r, round16(a.c));
+}
+
+void mat_sub(matrix_t *self, matrix_t a, matrix_t b) {
+  self->c = a.c;
+  self->r = a.r;
+  mat_reserve(self, round16(a.c) * a.r);
+  mfsub_avx2(a.dat, b.dat, self->dat, a.r, round16(a.c));
+}
+
+void mat_mul(matrix_t *self, matrix_t a, matrix_t b) {
+  self->c = a.c;
+  self->r = a.r;
+  mat_reserve(self, round16(a.c) * a.r);
+  mfmul_avx2(a.dat, b.dat, self->dat, a.r, round16(a.c));
+}
+
+void mat_div(matrix_t *self, matrix_t a, matrix_t b) {
+  self->c = a.c;
+  self->r = a.r;
+  mat_reserve(self, round16(a.c) * a.r);
+  mfdiv_avx2(a.dat, b.dat, self->dat, a.r, round16(a.c));
+}

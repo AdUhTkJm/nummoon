@@ -1,6 +1,13 @@
 extern type CMatrix;
 
 extern "C" fn mfaddeq(x: CMatrix, y: CMatrix) -> Unit = "mbt_mfaddeq";
+extern "C" fn mfsubeq(x: CMatrix, y: CMatrix) -> Unit = "mbt_mfsubeq";
+extern "C" fn mfmuleq(x: CMatrix, y: CMatrix) -> Unit = "mbt_mfmuleq";
+extern "C" fn mfdiveq(x: CMatrix, y: CMatrix) -> Unit = "mbt_mfdiveq";
+extern "C" fn mfadd(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfadd";
+extern "C" fn mfsub(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfsub";
+extern "C" fn mfmul(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfmul";
+extern "C" fn mfdiv(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfdiv";
 extern "C" fn mfcreate() -> CMatrix = "mbt_mfcreate";
 extern "C" fn mfcopyf(arr: FixedArray[FixedArray[Float]]) -> CMatrix = "mbt_mfcopyf";
 extern "C" fn mf2mbtarr(x: CMatrix) -> FixedArray[Float] = "mbt_mf2mbtarr";
@@ -25,14 +32,17 @@ pub impl MPointwiseOperable for Matrix with add_inplace(mat: Matrix, self: Matri
 
 pub impl MPointwiseOperable for Matrix with sub_inplace(mat: Matrix, self: Matrix) -> Unit {
   guard self.rows() == mat.rows() && self.cols() == mat.cols();
+  mfsubeq(mat.data, self.data);
 }
 
 pub impl MPointwiseOperable for Matrix with mul_inplace(mat: Matrix, self: Matrix) -> Unit {
   guard self.rows() == mat.rows() && self.cols() == mat.cols();
+  mfmuleq(mat.data, self.data);
 }
 
 pub impl MPointwiseOperable for Matrix with div_inplace(mat: Matrix, self: Matrix) -> Unit {
   guard self.rows() == mat.rows() && self.cols() == mat.cols();
+  mfdiveq(mat.data, self.data);
 }
 
 pub struct Matrix {
@@ -86,8 +96,39 @@ pub impl Show for Matrix with output(self, logger) -> Unit {
   return logger.write_string(self.to_string());
 }
 
+pub impl Add for Matrix with op_add(self: Matrix, other: Matrix) -> Matrix {
+  let copied = mfcreate();
+  mfadd(copied, self.data, other.data);
+  return { data: copied };
+}
+
+pub impl Sub for Matrix with op_sub(self: Matrix, other: Matrix) -> Matrix {
+  let copied = mfcreate();
+  mfsub(copied, self.data, other.data);
+  return { data: copied };
+}
+
+pub impl Mul for Matrix with op_mul(self: Matrix, other: Matrix) -> Matrix {
+  let copied = mfcreate();
+  mfmul(copied, self.data, other.data);
+  return { data: copied };
+}
+
+pub impl Div for Matrix with op_div(self: Matrix, other: Matrix) -> Matrix {
+  let copied = mfcreate();
+  mfdiv(copied, self.data, other.data);
+  return { data: copied };
+}
+
 test "arithmetic" {
   let x = Matrix::from_array([[1, 2], [3, 4]]);
   let y = Matrix::from_array([[5, 6], [7, 8]]);
-  inspect(x.add(y), content="[[6, 8], [10, 12]]");
+  inspect(x.rows(), content="2");
+  inspect(x.cols(), content="2");
+
+  inspect(x + y, content="[[6, 8], [10, 12]]");
+  inspect(x - y, content="[[-4, -4], [-4, -4]]");
+  inspect(x * y, content="[[5, 12], [21, 32]]");
+  // Float will lose precision at about 7th digit.
+  inspect(x / y, content="[[0.20000000298023224, 0.3333333432674408], [0.4285714328289032, 0.5]]");
 }

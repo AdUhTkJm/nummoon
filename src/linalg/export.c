@@ -135,6 +135,34 @@ void mbt_mfaddeq(void *x, void *y) {
   mat_add_inplace((matrix_t*) x, *(matrix_t*) y);
 }
 
+void mbt_mfsubeq(void *x, void *y) {
+  mat_sub_inplace((matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfmuleq(void *x, void *y) {
+  mat_mul_inplace((matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfdiveq(void *x, void *y) {
+  mat_div_inplace((matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfadd(void *tgt, void *x, void *y) {
+  mat_add((matrix_t*) tgt, *(matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfsub(void *tgt, void *x, void *y) {
+  mat_sub((matrix_t*) tgt, *(matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfmul(void *tgt, void *x, void *y) {
+  mat_mul((matrix_t*) tgt, *(matrix_t*) x, *(matrix_t*) y);
+}
+
+void mbt_mfdiv(void *tgt, void *x, void *y) {
+  mat_div((matrix_t*) tgt, *(matrix_t*) x, *(matrix_t*) y);
+}
+
 void *mbt_mfcopyf(float **arr) {
   matrix_t *mat = mbt_mfcreate();
   mat->r = Moonbit_array_length(arr);

@@ -23,6 +23,9 @@ float vfsum_avx2(const float *out, unsigned size);
 float vfdot_avx2(const float *x, const float *y, unsigned size);
 
 void mfadd_avx2(float *a, float *b, float *out, unsigned int r, unsigned int c);
+void mfsub_avx2(float *a, float *b, float *out, unsigned int r, unsigned int c);
+void mfmul_avx2(float *a, float *b, float *out, unsigned int r, unsigned int c);
+void mfdiv_avx2(float *a, float *b, float *out, unsigned int r, unsigned int c);
 
 // These are actually not intrinsics; normal C will do.
 unsigned round16(unsigned x);

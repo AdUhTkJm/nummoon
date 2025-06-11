@@ -92,12 +92,28 @@ pub fn Matrix::op_get(self: Matrix, i: Int) -> Vector {
 
 ///| Creates a matrix with data copied from `self`.
 pub fn Matrix::clone(self: Matrix) -> Matrix {
-  return { data: self.data.copy() };
+  let copied = Array::makei(self.data.length(), fn (i) { self.data[i].copy() });
+  return { data: copied };
 }
 
 ///| Adds in-place.
 pub fn[T: MPointwiseOperable] Matrix::add(self: Matrix, other: T) -> Matrix {
   T::add_inplace(self, other);
+  return self;
+}
+
+pub fn[T: MPointwiseOperable] Matrix::sub(self: Matrix, other: T) -> Matrix {
+  T::sub_inplace(self, other);
+  return self;
+}
+
+pub fn[T: MPointwiseOperable] Matrix::mul(self: Matrix, other: T) -> Matrix {
+  T::mul_inplace(self, other);
+  return self;
+}
+
+pub fn[T: MPointwiseOperable] Matrix::div(self: Matrix, other: T) -> Matrix {
+  T::div_inplace(self, other);
   return self;
 }
 
@@ -113,6 +129,18 @@ pub impl Add for Matrix with op_add(self, other) -> Matrix {
   return self.clone().add(other);
 }
 
+pub impl Sub for Matrix with op_sub(self, other) -> Matrix {
+  return self.clone().sub(other);
+}
+
+pub impl Mul for Matrix with op_mul(self, other) -> Matrix {
+  return self.clone().mul(other);
+}
+
+pub impl Div for Matrix with op_div(self, other) -> Matrix {
+  return self.clone().div(other);
+}
+
 test "arithmetic" {
   let x = Matrix::from_array([[1, 2], [3, 4]]);
   let y = Matrix::from_array([[5, 6], [7, 8]]);
@@ -120,4 +148,8 @@ test "arithmetic" {
   inspect(x.cols(), content="2");
 
   inspect(x + y, content="[[6, 8], [10, 12]]");
+  inspect(x - y, content="[[-4, -4], [-4, -4]]");
+  inspect(x * y, content="[[5, 12], [21, 32]]");
+  // Float will lose precision at about 7th digit.
+  inspect(x / y, content="[[0.20000000298023224, 0.3333333432674408], [0.4285714328289032, 0.5]]");
 }
