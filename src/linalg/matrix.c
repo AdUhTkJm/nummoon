@@ -1,6 +1,11 @@
 #include "matrix.h"
 #include "stdlib.h"
 #include "intrin.h"
+#include <stdio.h>
+#include <string.h>
+
+// Suppress warning of unused headers.
+void _unused() { printf("a"); }
 
 void mat_reserve(matrix_t *self, unsigned cap) {
   if (self->cap >= cap)
@@ -59,4 +64,13 @@ void mat_div(matrix_t *self, matrix_t a, matrix_t b) {
   self->r = a.r;
   mat_reserve(self, round16(a.c) * a.r);
   mfdiv_avx2(a.dat, b.dat, self->dat, a.r, round16(a.c));
+}
+
+void mat_mmul(matrix_t *self, matrix_t a, matrix_t b) {
+  self->r = a.r;
+  self->c = b.c;
+  mat_reserve(self, round16(self->c) * self->r);
+  // Zero-out self.
+  memset(self->dat, 0, self->cap * sizeof(float));
+  mfmmul_avx2(a.dat, b.dat, self->dat, a.r, a.c, round16(b.c));
 }

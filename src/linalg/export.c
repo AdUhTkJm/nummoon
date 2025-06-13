@@ -198,3 +198,9 @@ int mbt_mfrows(void *mat) {
 int mbt_mfcols(void *mat) {
   return ((matrix_t*) mat)->c;
 }
+
+void *mbt_mfmmul(void *x, void *y) {
+  matrix_t *mat = mbt_mfcreate();
+  mat_mmul(mat, *(matrix_t*) x, *(matrix_t*) y);
+  return mat;
+}

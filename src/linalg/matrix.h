@@ -22,3 +22,5 @@ void mat_add(matrix_t *self, matrix_t a, matrix_t b);
 void mat_sub(matrix_t *self, matrix_t a, matrix_t b);
 void mat_mul(matrix_t *self, matrix_t a, matrix_t b);
 void mat_div(matrix_t *self, matrix_t a, matrix_t b);
+
+void mat_mmul(matrix_t *self, matrix_t a, matrix_t b);

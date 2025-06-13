@@ -282,19 +282,6 @@ test "create" {
   inspect(v.sum(), content="43");
 }
 
-test "benchmark_add" {
-  let summary = @bench.single_bench(fn () {
-    let n = 1048576;
-    let c = Vector::zeroes(n);
-    let a = Vector::arange(n.to_float());
-    for i = 0; i < 1000; i = i + 1 {
-      c.add(a).ignore();
-    }
-    println(c.sum());
-  });
-  println(summary.to_json().stringify());
-}
-
 ///| Calculate dot product of two vectors.
 pub fn Vector::dot(self: Vector, other: Vector) -> Float {
   guard self.size() == other.size();
@@ -349,17 +336,6 @@ test "dot" {
   inspect(y, content="[0, 1.600000023841858, 3.200000047683716, 4.800000190734863, 6.400000095367432]");
   let z = Vector::arange(5);
   inspect(y.dot(z), content="48");
-}
-
-test "benchmark_dot" {
-  let x = Vector::linspace(0.2795, 6.8704, 1048576);
-  let y = Vector::linspace(-1.6269, 3.5057, 1048576);
-  let mut sum = 0.F;
-  let summary = @bench.single_bench(fn () {
-    sum = x.dot(y);
-  });
-  inspect(sum, content="6477271");
-  println(summary.to_json().stringify());
 }
 
 ///| Create a view from internal data type.

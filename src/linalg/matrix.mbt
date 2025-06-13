@@ -8,6 +8,7 @@ extern "C" fn mfadd(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfadd";
 extern "C" fn mfsub(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfsub";
 extern "C" fn mfmul(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfmul";
 extern "C" fn mfdiv(tgt: CMatrix, x: CMatrix, y: CMatrix) -> Unit = "mbt_mfdiv";
+extern "C" fn mfmmul(x: CMatrix, y: CMatrix) -> CMatrix = "mbt_mfmmul";
 extern "C" fn mfcreate() -> CMatrix = "mbt_mfcreate";
 extern "C" fn mfcopyf(arr: FixedArray[FixedArray[Float]]) -> CMatrix = "mbt_mfcopyf";
 extern "C" fn mf2mbtarr(x: CMatrix) -> FixedArray[Float] = "mbt_mf2mbtarr";
@@ -131,4 +132,15 @@ test "arithmetic" {
   inspect(x * y, content="[[5, 12], [21, 32]]");
   // Float will lose precision at about 7th digit.
   inspect(x / y, content="[[0.20000000298023224, 0.3333333432674408], [0.4285714328289032, 0.5]]");
+}
+
+///| Matrix multiplication. Returns a new matrix without changing self.
+pub fn Matrix::mmul(self: Matrix, other: Matrix) -> Matrix {
+  return { data: mfmmul(self.data, other.data) };
+}
+
+test "mmul" {
+  let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+  let y = Matrix::from_array([[7, 8], [9, 10], [11, 12]]);
+  inspect(x.mmul(y), content="[[58, 64], [139, 154]]");
 }

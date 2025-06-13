@@ -13,6 +13,8 @@ If you're willing to, I'm welcome for contributions.
 
 ## Examples
 
+### Vectors
+
 NOTE: The vectors are all float vectors.
 
 The operators can only accept two identical types, due to constraints of the Moonbit language.
@@ -43,7 +45,7 @@ If you wish to preserve the vector, use `clone()`.
 ```mbt
 let x = Vector::from_array([2, 5, 7, 8, 9, 3]);
 let y = x.clone();
-y.sub(1); // Changes `y`, but `x` will not change.
+y.sub(1).ignore(); // Changes `y`, but `x` will not change.
 inspect(x, content="[2, 5, 7, 8, 9, 3]");
 ```
 
@@ -52,15 +54,43 @@ Otherwise, a direct assignment will only capture reference:
 ```mbt
 let x = Vector::from_array([2, 5, 7, 8, 9, 3]);
 let y = x;
-y.mul(2); // Now `y` and `x` will both change.
+y.mul(2).ignore(); // Now `y` and `x` will both change.
 inspect(x, content="[4, 10, 14, 16, 18, 6]");
+```
+
+### Matrices
+
+Normal arithmetic of matrices are like vectors.
+
+```mbt
+let x = Matrix::from_array([[1, 2], [3, 4]]);
+let y = Matrix::from_array([[5, 6], [7, 8]]);
+inspect(x.rows(), content="2");
+inspect(x.cols(), content="2");
+
+inspect(x + y, content="[[6, 8], [10, 12]]");
+inspect(x - y, content="[[-4, -4], [-4, -4]]");
+inspect(x * y, content="[[5, 12], [21, 32]]");
+// Float will lose precision at about 7th digit.
+inspect(x / y, content="[[0.20000000298023224, 0.3333333432674408], [0.4285714328289032, 0.5]]");
+```
+
+Similarly, `add`, `sub`, `mul` and `div` will modify the matrix inplace.
+
+For matrix multiplication, use `mmul`. It will allocate a new matrix without modifying the sources, as it is usually undesirable to also change the source size.
+
+```mbt
+let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+let y = Matrix::from_array([[7, 8], [9, 10], [11, 12]]);
+inspect(x.mmul(y), content="[[58, 64], [139, 154]]");
+// `x` and `y` remain unchanged
 ```
 
 ## Benchmark
 
 We will compare between Moonbit fallback implementation of WASM-GC backend, the native AVX-2 implementaion, and the well-known python library `numpy`. We will present the Moonbit benchmark here; for the python benchmark, please visit the [repository](https://github.com/AdUhTkJm/nummoon/tree/main/benchmark).
 
-*Why comparing WASM-GC with native?* Actually, I tried to run the fallback implementation on native backend as well. However, the result turned out to be that Moonbit's native backend is extremely slow: it will experience ~20x slow down with WASM-GC when executing such benchmarks. The reason is still unclear to me. If you have any idea, please file an issue in the repository, and I would appreciate your help.
+*Why comparing WASM-GC with native?* Actually, I tried to run the fallback implementation on native backend as well. However, the result turned out to be that Moonbit's native backend is extremely slow: it will experience ~20x slow down compared to WASM-GC when executing the following benchmarks. The reason is still unclear to me (did Moonbit interpret the C code rather than compile and execute?). If you have any idea, please file an issue in the repository, and I would appreciate your help.
 
 In the following sections, we will also calculate the speedup brought by the native to fallback implementation.
 
