@@ -13,6 +13,8 @@ If you're willing to, I'm welcome for contributions.
 
 ## Examples
 
+It is highly recommended that you only rely on the first 7-8 effective digits, as float loses precision quite easily. Sometimes numpy, Moonbit fallback and native implementation will give different results on later digits.
+
 ### Vectors
 
 NOTE: The vectors are all float vectors.
@@ -29,7 +31,7 @@ inspect(x * y, content="[0, 1, 4, 9, 16, 25]");
 inspect(x / y, content="[NaN, 1, 1, 1, 1, 1]");
 ```
 
-For broadcasting, please use the methods of type `Vector`, which will modify the object in-place:
+For broadcasting, please use the methods of type `Vector`, which will modify the object **in-place**:
 
 ```mbt
 let x = Vector::arange(6);
@@ -84,6 +86,25 @@ let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
 let y = Matrix::from_array([[7, 8], [9, 10], [11, 12]]);
 inspect(x.mmul(y), content="[[58, 64], [139, 154]]");
 // `x` and `y` remain unchanged
+```
+
+You can access matrix rows by `op_get`, which will return a vector. This will be a **view** of the original matrix: when you change the size of the vector, the behaviour will be undefined. Therefore, all vector operations provided so far are designed to not change its size inplace.
+
+```mbt
+let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+inspect(x[0], content="[1, 2, 3]");
+inspect(x[1], content="[4, 5, 6]");
+// As x[0] is a view of x, changing x[0] will also change x.
+x[0].sub(x[1]).ignore();
+inspect(x, content="[[-3, -3, -3], [4, 5, 6]]");
+```
+
+You can obtain the sum of rows by a call to `sum_rows()`, and the sum of all entries by `sum()`.
+
+```mbt
+let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+inspect(x.sum(), content="21");
+inspect(x.sum_rows(), content="[5, 7, 9]");
 ```
 
 ## Benchmark
@@ -143,3 +164,34 @@ Output comparison:
 - Numpy: 639.09 us
 
 Speedup: 30.9x
+
+### Matrix multiplication
+
+```mbt
+test "benchmark_mmul" {
+  let farr = Array::makei(500, fn (i) {
+    Array::makei(500, fn (j) {
+      return i.to_float() * 1.028F - j.to_float() * 0.906F;
+    })
+  });
+  let garr = Array::makei(500, fn (i) {
+    Array::makei(500, fn (j) {
+      return i.to_float() * -0.775F + j.to_float() * 1.313F;
+    })
+  });
+  let x = Matrix::from_array(farr);
+  let y = Matrix::from_array(garr);
+  let mut sum = 0.F;
+  let summary = @bench.single_bench(fn () {
+    sum = x.mmul(y).sum();
+  });
+  println(sum);
+  println(summary.to_json().stringify());
+}
+```
+
+- Moonbit WASM-GC implementation: 648877.86 us
+- Native backend: 8964.02 us
+- Numpy: 51658.35 us
+
+Speedup: 72.4x

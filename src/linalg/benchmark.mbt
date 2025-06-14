@@ -21,3 +21,24 @@ test "benchmark_dot" {
   inspect(sum, content="6477421");
   println(summary.to_json().stringify());
 }
+
+test "benchmark_mmul" {
+  let farr = Array::makei(500, fn (i) {
+    Array::makei(500, fn (j) {
+      return i.to_float() * 1.028F - j.to_float() * 0.906F;
+    })
+  });
+  let garr = Array::makei(500, fn (i) {
+    Array::makei(500, fn (j) {
+      return i.to_float() * -0.775F + j.to_float() * 1.313F;
+    })
+  });
+  let x = Matrix::from_array(farr);
+  let y = Matrix::from_array(garr);
+  let mut mat = Matrix::new();
+  let summary = @bench.single_bench(fn () {
+    mat = x.mmul(y);
+  });
+  println(mat.sum());
+  println(summary.to_json().stringify());
+}

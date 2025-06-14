@@ -184,3 +184,28 @@ test "mmul" {
   let y = Matrix::from_array([[7, 8], [9, 10], [11, 12]]);
   inspect(x.mmul(y), content="[[58, 64], [139, 154]]");
 }
+
+///| Returns the sum of every element in the matrix.
+pub fn Matrix::sum(self: Matrix) -> Float {
+  return self.sum_rows().sum();
+}
+
+///| Returns the sum of every column.
+/// 
+/// This will result in a vector with dimension equal to `self.rows()`.
+pub fn Matrix::sum_rows(self: Matrix) -> Vector {
+  if (self.rows() < 1) {
+    return Vector::new();
+  }
+  let vec = self[0].clone();
+  for i = 1; i < self.rows(); i = i + 1 {
+    vec.add(self[i]).ignore();
+  }
+  return vec;
+}
+
+test "sum" {
+  let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+  inspect(x.sum(), content="21");
+  inspect(x.sum_rows(), content="[5, 7, 9]");
+}

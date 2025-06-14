@@ -14,6 +14,7 @@ extern "C" fn mfcopyf(arr: FixedArray[FixedArray[Float]]) -> CMatrix = "mbt_mfco
 extern "C" fn mf2mbtarr(x: CMatrix) -> FixedArray[Float] = "mbt_mf2mbtarr";
 extern "C" fn mfrows(x: CMatrix) -> Int = "mbt_mfrows";
 extern "C" fn mfcols(x: CMatrix) -> Int = "mbt_mfcols";
+extern "C" fn mfviewv(x: CMatrix, i: Int) -> CVector = "mbt_mfviewv";
 
 ///| Pointwise (element-wise) operable with a matrix.
 /// By default, Int, Float and Vector implement this trait.
@@ -143,4 +144,34 @@ test "mmul" {
   let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
   let y = Matrix::from_array([[7, 8], [9, 10], [11, 12]]);
   inspect(x.mmul(y), content="[[58, 64], [139, 154]]");
+}
+
+///| Returns the sum of every element in the matrix.
+pub fn Matrix::sum(self: Matrix) -> Float {
+  return self.sum_rows().sum();
+}
+
+///| Returns the sum of every column.
+/// 
+/// This will result in a vector with dimension equal to `self.rows()`.
+pub fn Matrix::sum_rows(self: Matrix) -> Vector {
+  if (self.rows() < 1) {
+    return Vector::new();
+  }
+  let vec = self[0].clone();
+  for i = 1; i < self.rows(); i = i + 1 {
+    vec.add(self[i]).ignore();
+  }
+  return vec;
+}
+
+pub fn Matrix::op_get(self: Matrix, i: Int) -> Vector {
+  guard i >= 0 && i <= self.rows();
+  return { data: mfviewv(self.data, i) };
+}
+
+test "sum" {
+  let x = Matrix::from_array([[1, 2, 3], [4, 5, 6]]);
+  inspect(x.sum(), content="21");
+  inspect(x.sum_rows(), content="[5, 7, 9]");
 }

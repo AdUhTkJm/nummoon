@@ -204,3 +204,13 @@ void *mbt_mfmmul(void *x, void *y) {
   mat_mmul(mat, *(matrix_t*) x, *(matrix_t*) y);
   return mat;
 }
+
+void *mbt_mfviewv(void *mat_, int i) {
+  matrix_t *mat = mat_;
+  vector_t *vec = moonbit_make_external_object(mbt_vfrelease, sizeof(vector_t));
+  int rnd = round16(mat->c);
+  vec->sz = mat->c;
+  vec->cap = rnd;
+  vec->dat = mat->dat + i * rnd;
+  return vec;
+}
