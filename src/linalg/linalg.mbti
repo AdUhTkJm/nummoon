@@ -1,0 +1,81 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "AdUhTkJm/nummoon/linalg"
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Matrix {
+  data : Array[Array[Float]]
+}
+fn[T : MPointwiseOperable] Matrix::add(Self, T) -> Self
+fn Matrix::clone(Self) -> Self
+fn Matrix::cols(Self) -> Int
+fn[T : MPointwiseOperable] Matrix::div(Self, T) -> Self
+fn Matrix::from_array(Array[Array[Float]]) -> Self
+fn Matrix::mmul(Self, Self) -> Self
+fn[T : MPointwiseOperable] Matrix::mul(Self, T) -> Self
+fn Matrix::new() -> Self
+fn Matrix::op_get(Self, Int) -> Vector
+fn Matrix::rows(Self) -> Int
+fn[T : MPointwiseOperable] Matrix::sub(Self, T) -> Self
+fn Matrix::sum(Self) -> Float
+fn Matrix::sum_rows(Self) -> Vector
+fn Matrix::zeroes(Int, Int) -> Self
+impl MPointwiseOperable for Matrix
+impl Add for Matrix
+impl Div for Matrix
+impl Mul for Matrix
+impl Show for Matrix
+impl Sub for Matrix
+
+pub struct Vector {
+  data : Array[Float]
+}
+fn[T : VPointwiseOperable] Vector::add(Self, T) -> Self
+fn Vector::arange(Float) -> Self
+fn Vector::clone(Self) -> Self
+fn Vector::cos_between(Self, Self) -> Float
+fn[T : VPointwiseOperable] Vector::div(Self, T) -> Self
+fn Vector::dot(Self, Self) -> Float
+fn Vector::from_array(Array[Float]) -> Self
+fn Vector::from_fixed_array(FixedArray[Float]) -> Self
+fn Vector::ignore(Self) -> Unit
+fn Vector::length(Self) -> Int
+fn Vector::linspace(Float, Float, Int) -> Self
+fn[T : VPointwiseOperable] Vector::mul(Self, T) -> Self
+fn Vector::new() -> Self
+fn Vector::norm(Self) -> Float
+fn Vector::op_get(Self, UInt) -> Float
+fn Vector::op_set(Self, UInt, Float) -> Unit
+fn Vector::size(Self) -> UInt
+fn[T : VPointwiseOperable] Vector::sub(Self, T) -> Self
+fn Vector::sum(Self) -> Float
+fn Vector::zeroes(Int) -> Self
+impl VPointwiseOperable for Vector
+impl Add for Vector
+impl Div for Vector
+impl Mul for Vector
+impl Show for Vector
+impl Sub for Vector
+
+// Type aliases
+
+// Traits
+pub(open) trait MPointwiseOperable {
+  add_inplace(Matrix, Self) -> Unit
+  sub_inplace(Matrix, Self) -> Unit
+  mul_inplace(Matrix, Self) -> Unit
+  div_inplace(Matrix, Self) -> Unit
+}
+
+pub(open) trait VPointwiseOperable {
+  add_inplace(Vector, Self) -> Unit
+  sub_inplace(Vector, Self) -> Unit
+  mul_inplace(Vector, Self) -> Unit
+  div_inplace(Vector, Self) -> Unit
+}
+impl VPointwiseOperable for Int
+impl VPointwiseOperable for Float
+
